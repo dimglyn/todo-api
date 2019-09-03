@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const port = 8080;
-const todoService = require('./services/todo');
+const todoRoutes = require('./routes/todo')
 
 const app = express();
 
@@ -17,37 +17,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get("/todos", (req, res, next) => {
-    const todos = todoService.getAll();
-    res.status(200).json(todos);
-});
-
-app.post('/todos', (req, res, next) => {
-    try {
-        const newTodo = todoService.create(req.body);
-        res.status(201).json(newTodo);
-    } catch (err) {
-        next(err);
-    }
-});
-
-app.get("/todos/:id", (req, res, next) => {
-    try {
-        const todo = todoService.get(req.params.id);
-        res.status(200).json(todo);
-    } catch (err) {
-        next(err);
-    }
-});
-
-app.delete('/todos/:id', (req,  res, next) => {
-    try {
-        const deletedTodo = todoService.del(req.params.id);
-        res.status(202).json(deletedTodo);
-    } catch (err) {
-        next(err);
-    }
-});
+app.use('/todos', todoRoutes);
 
 app.use((error, req, res, next) => {
     console.log(error);
