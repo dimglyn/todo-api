@@ -1,13 +1,22 @@
-class Todo {
-    constructor(id, text, tags){
-        this.id = id;
-        this.text = text;
-        this.tags = tags ? tags : [];
-    }
+const mongoose = require('mongoose');
+const {
+    Schema
+} = mongoose;
 
-    addTag() {
+const TodoSchema = new Schema({
+    text: {
+        required: true,
+        type: String
+    },
+    tags: [{
+        type: String,
+        required: true,
+        default: []
+    }]
+});
 
-    }
+const Todo = mongoose.model('Todo', TodoSchema);
+module.exports = {
+    Todo,
+    TodoSchema
 }
-
-module.exports = Todo;

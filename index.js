@@ -24,11 +24,10 @@ app.use('/todos', todoRoutes);
 app.use((error, req, res, next) => {
     logger.error(error);
     const {
-        statusCode: status,
         message
     } = error;
     const data = error.data;
-    res.status(status).json({
+    res.status(500).json({
         message,
         data
     })

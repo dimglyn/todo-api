@@ -2,8 +2,12 @@ const todoService = require('../services/todo');
 
 module.exports = {
     getTodos: async (req, res, next) => {
-        const todos = await todoService.getAll();
-        res.status(200).json(todos);
+        try {
+            const todos = await todoService.getAll();
+            res.status(200).json(todos);
+        } catch (error) {
+            next(err);
+        }
     },
 
     addTodo: async (req, res, next) => {
