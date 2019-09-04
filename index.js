@@ -1,23 +1,22 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const port = 8080;
+const mongoose = require('mongoose');
+const {
+    port,
+    mongoURI
+} = require('./config');
+const cors = require('cors');
 const todoRoutes = require('./routes/todo')
 
 const app = express();
 
 app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader(
-        'Access-Control-Allow-Methods',
-        'OPTIONS, GET, POST, PUT, PATCH, DELETE'
-    );
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-});
+app.use(cors());
 
 app.use('/todos', todoRoutes);
+
+
 
 app.use((error, req, res, next) => {
     console.log(error);
@@ -32,4 +31,12 @@ app.use((error, req, res, next) => {
     })
 });
 
-app.listen(port, () => console.log(`listening on ${port}`));
+
+mongoose.connect(mongoURI, {
+        useNewUrlParser: true
+    })
+    .then(() => {
+        console.log(`Mongoose connected on: ${mongoURI}`);
+        app.listen(port, 'localhost', () => console.log(`listening on ${port}`))
+    })
+    .catch(err => console.log(err));
