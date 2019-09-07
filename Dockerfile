@@ -10,6 +10,6 @@ RUN npm cache clean --force
 RUN npm install --dev nodemon
 RUN npm install
 
-EXPOSE 8880
+EXPOSE 8080
 
-CMD npm start
+CMD npm run docker

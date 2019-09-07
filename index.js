@@ -3,24 +3,19 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const {
-    port,
-    mongoURI
+    PORT,
+    MONGOURI,
+    HOST
 } = require('./config');
 const cors = require('cors');
-
 const app = express();
-
 const logger = require('./util/logger');
 const todoRoutes = require('./routes/todo');
 
 app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan('combined'));
-
 app.use('/todos', todoRoutes);
-
-
-
 app.use((error, req, res, next) => {
     logger.error(error);
     const {
@@ -33,12 +28,11 @@ app.use((error, req, res, next) => {
     })
 });
 
-
-mongoose.connect(mongoURI, {
+mongoose.connect(MONGOURI, {
         useNewUrlParser: true
     })
     .then(() => {
-        logger.info(`Mongoose connected on: ${mongoURI}`);
-        app.listen(port, 'localhost', () => logger.info(`listening on ${port}`))
+        logger.info(`Mongoose connected on: ${MONGOURI}`);
+        app.listen(PORT, HOST, () => logger.info(`listening on ${HOST}:${PORT}`))
     })
     .catch(err => logger.error(err));
