@@ -21,6 +21,14 @@ module.exports = {
         return todo;
     },
 
+    update: async (id, data) => {
+        const updatedTodo = await Todo.findByIdAndUpdate( id, {...data, updatedAt: Date.now() }, { new: true });
+        if(!updatedTodo) {
+            throw new Error('Invalid todo ID.');
+        }
+        return updatedTodo;
+    },
+
     del: async (id) => {
         const todo = await Todo.deleteOne({_id: id});
         if(!todo) {

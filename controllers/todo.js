@@ -28,6 +28,19 @@ module.exports = {
         }
     },
 
+    updateTodo: async(req, res, next) => {
+        try {
+            const update = {
+                ...req.body.text && {text: req.body.text},
+                ...req.body.tags && {tags: [...req.body.tags]}
+            };
+            const updatedTodo = await todoService.update(req.params.id, update);
+            res.status(201).json(updatedTodo);
+        } catch (err) {
+            next(err);
+        }
+    },
+
     deleteTodo: async (req, res, next) => {
         try {
             const deletedTodo = await todoService.del(req.params.id);

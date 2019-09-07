@@ -2,7 +2,7 @@ const winston = require('winston');
 
 const logger = winston.createLogger({
     defaultMeta: {
-        service: 'user-service'
+        service: 'todoApp-service'
     },
     format: winston.format.json(),
     level: 'info',
