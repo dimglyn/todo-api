@@ -32,7 +32,8 @@ module.exports = {
         try {
             const update = {
                 ...req.body.text && {text: req.body.text},
-                ...req.body.tags && {tags: [...req.body.tags]}
+                ...req.body.tags && {tags: [...req.body.tags]},
+                ...req.body.dueDate && {dueDate: req.body.dueDate}
             };
             const updatedTodo = await todoService.update(req.params.id, update);
             res.status(201).json(updatedTodo);
