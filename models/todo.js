@@ -12,7 +12,12 @@ const TodoSchema = new Schema({
         type: String,
         required: true,
         default: []
-    }]
+    }],
+    dueDate: {
+        type: Date,
+        required: true,
+        default: null
+    }
 });
 
 const Todo = mongoose.model('Todo', TodoSchema);

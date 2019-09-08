@@ -4,11 +4,11 @@ module.exports = {
     getAll: async () => Todo.find({}),
 
     create: async (todo) => {
-        const { text } = todo;
+        const { text, tags, dueDate } = todo;
         if(todo.text.trim() === "") {
             throw new Error("Task cannot be empty.");
         }
-        let newTodo = new Todo({ text })
+        let newTodo = new Todo({ text, tags, dueDate })
         await newTodo.save();
         return newTodo;
     },
