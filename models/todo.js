@@ -17,6 +17,11 @@ const TodoSchema = new Schema({
         type: Date,
         required: true,
         default: null
+    },
+    done: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 });
 
