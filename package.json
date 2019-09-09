@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test": "mocha --timeout 5000",
     "start": "nodemon index.js",
     "debug": "nodemon --inspect index.js",
-    "docker": "set HOST=0.0.0.0&& npm start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "docker": "set HOST=0.0.0.0&& npm start"
   },
   "author": "",
   "license": "ISC",
@@ -18,5 +18,9 @@
     "mongoose": "^5.6.12",
     "morgan": "^1.9.1",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.0"
   }
 }
