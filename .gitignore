@@ -1,4 +1,4 @@
 node_modules/
 package-lock.json
-combined.log
-error.log
+log/combined.log
+log/error.log
