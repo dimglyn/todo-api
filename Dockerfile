@@ -10,6 +10,9 @@ RUN npm cache clean --force
 RUN npm install --dev nodemon
 RUN npm install
 
+RUN npm install pm2 -g
+RUN npm install --production
+
 EXPOSE 8080
 
-CMD npm run docker
+CMD [ "pm2-runtime", "index.js" ]
