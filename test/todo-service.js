@@ -19,9 +19,8 @@ describe('Todo Service', function() {
             text: initialText,
             tags: initialTags
         };
-        console.log(payload)
         const todo = await todoService.create(payload);
-        todoId = todo._id;
+        dummyTodoId = todo._id;
         expect(todo).to.have.property('text');
         expect(todo).to.have.property('dueDate');
         expect(todo).to.have.property('tags').with.lengthOf(3);
@@ -39,18 +38,16 @@ describe('Todo Service', function() {
     });
 
     it('should get a todo by its id', async function() {
-        const todo = await todoService.get(todoId);
+        const todo = await todoService.get(dummyTodoId);
 
         expect(todo.text).to.equal(initialText);
         todo.tags.forEach((tag, index) => {
             expect(tag).to.equal(initialTags[index]);
         });
-    })
+    });
 
     it('should update a todo and return the new object', async function() {
-        const todos = await todoService.getAll();
-
-        const todoId = todos[0]._id;
+        const todoId = dummyTodoId;
         const newData = {
             text: 'This is some fancy todo',
             tags: ['newtag'],
@@ -64,7 +61,11 @@ describe('Todo Service', function() {
             expect(tag).to.equal(newData.tags[index]);
         });
         expect(updatedTodo.dueDate.toString()).to.equal((new Date(newData.dueDate)).toString());
-    })
+    });
+
+    it('should delete a todo by id', async function(){
+
+    });
 
     after(async function(){
         await Todo.deleteMany({});
