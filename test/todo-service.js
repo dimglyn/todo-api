@@ -11,7 +11,7 @@ const initialTags = ['tag1', 'tag2', 'tag3'];
 
 describe('Todo Service', function() {
     before(async function(){
-        await mongoose.connect(`${config.MONGOURI}?retryWrites=true`, { useNewUrlParser: true });
+        await mongoose.connect(`${config.MONGOURI}?retryWrites=true`, { useNewUrlParser: true, useFindAndModify: false });
     });
 
     it('should add a new todo in the database', async function(){ 
@@ -64,7 +64,8 @@ describe('Todo Service', function() {
     });
 
     it('should delete a todo by id', async function(){
-
+        const result = await todoService.del(dummyTodoId);
+        expect(result.deletedCount).to.equal(1);
     });
 
     after(async function(){
