@@ -51,6 +51,15 @@ module.exports = {
         }
     },
 
+    markUndone: async(req, res, next) => {
+        try {
+            const updatedTodo = await todoService.update(req.params.id, { done: false });
+            res.status(201).json(updatedTodo);
+        } catch (err) {
+            next(err);
+        }
+    },
+
     deleteTodo: async (req, res, next) => {
         try {
             const deletedTodo = await todoService.del(req.params.id);
