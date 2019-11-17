@@ -1,12 +1,12 @@
 import TodoService from '../src/services/todo'
+import Todo from '../src/models/todo'
+import mongoose from 'mongoose'
+import { expect } from 'chai'
+import config from '../config'
+
 const todoService = new TodoService()
-const { Todo } = require('../src/models/todo')
-const mongoose = require('mongoose')
-const expect = require('chai').expect
-const config = require('../config')
 
 let dummyTodoId
-
 const initialText = 'This is a test todo'
 const initialTags = ['tag1', 'tag2', 'tag3']
 
@@ -65,8 +65,8 @@ describe('Todo Service', function() {
     })
 
     it('should delete a todo by id', async function(){
-        const result = await todoService.del(dummyTodoId)
-        expect(result.deletedCount).to.equal(1)
+        const deletedTodo = await todoService.del(dummyTodoId)
+        expect(deletedTodo._id.toString()).to.equal(dummyTodoId.toString())
     })
 
     after(async function(){
