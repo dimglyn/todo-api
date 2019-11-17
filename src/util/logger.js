@@ -1,4 +1,4 @@
-const winston = require('winston');
+import winston from 'winston'
 
 const logger = winston.createLogger({
     defaultMeta: {
@@ -15,11 +15,11 @@ const logger = winston.createLogger({
             filename: 'log/combined.log'
         })
     ]
-});
+})
 if (process.env.NODE_ENV !== 'production') {
     logger.add(new winston.transports.Console({
         format: winston.format.simple()
-    }));
+    }))
 }
 
-module.exports = logger;
+export { logger as default }

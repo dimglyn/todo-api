@@ -1,0 +1,33 @@
+type Query {
+  todos: [Todo!]!
+  todo(todoID: ID!): Todo!    
+}
+
+type Mutation {
+  createTodo(data: CreateTodoInput!): Todo!
+  deleteTodo(todoID: ID!): Todo!
+  updateTodo(todoID: ID!, data: UpdateTodoInput!): Todo!
+  markDone(todoID: ID!): Todo!
+  markUnDone(todoID: ID!): Todo!
+}
+
+type Todo {
+  id: ID!
+  text: String!
+  tags: [String!]
+  dueDate: String
+  done: Boolean!
+}
+
+input CreateTodoInput {
+  text: String!
+  tags: [String!]
+  dueDate: String
+}
+
+input UpdateTodoInput {
+  text: String
+  tags: [String!]
+  dueDate: String
+  done: Boolean    
+}
