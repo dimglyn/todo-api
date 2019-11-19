@@ -15,7 +15,7 @@ class TodoService {
         return newTodo
     }
 
-    async get(id) {
+    async getById(id) {
         const todo = await Todo.findOne({_id: id})
         if(!todo) {
             throw new Error('Invalid todo ID.')
