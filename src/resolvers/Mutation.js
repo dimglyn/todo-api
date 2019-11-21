@@ -1,4 +1,10 @@
 import TodoService from '../services/todo'
+import UserService from '../services/user'
+import validator from 'validator'
+
+import jwt from 'jsonwebtoken'
+
+const userService = new UserService()
 const todoService = new TodoService()
 
 const Mutation  = {
@@ -27,6 +33,38 @@ const Mutation  = {
   markUnDone: async (parent, args, ctx, info) => {
     const todo = await todoService.update(args.todoID, {done: false});
     return todo;
+  },
+
+  signUp: async (parent, { data }, ctx, info) => {
+    const errors = []
+
+    if (!validator.isEmail(data.email)) {
+      errors.push({ message: 'E-mail is invalid.' })
+    }
+
+    if(validator.isEmpty(data.password) || !validator.isLength(data.password, { min: 5 })){
+        errors.push({message: 'Password too short!'})
+    }
+
+    if(errors.length > 0) {
+      const error = new Error('Invalid input.')
+      error.data = errors
+      error.code = 422
+      throw error
+    }
+
+    const user = await userService.create(data)
+
+    console.log(user.email);
+
+    const token = jwt.sign({
+      userId: user._id.toString(),
+      email: user.email
+    }, 
+    'supersecretsecretysecret',
+    {expiresIn: '1h'})
+
+    return { token , user: user }
   }
 }
 

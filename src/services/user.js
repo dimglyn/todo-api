@@ -1,18 +1,30 @@
 import User from '../models/user'
 
+const bcrypt = require('bcryptjs')
+
+
 class UserService {
     async getAll() {
       return await User.find({})
     }
 
-    async create(user) {
-        const { text, tags, dueDate } = user
-        if(user.text.trim() === "") {
-            throw new Error("Task cannot be empty.")
+    async create(data) {
+        const { name, email, password } = data
+        const existingUser = await User.findOne({email: email})
+        if(existingUser) {
+            const error = new Error('User exists already!')
+            throw error
         }
-        let newUser = new User({ text, tags, dueDate })
-        await newUser.save()
-        return newUser
+        const hashedPw = await bcrypt.hash(password, 12)
+        
+        const user = new User({
+            email,
+            name,
+            password: hashedPw
+        })
+        
+        await user.save()
+        return user
     }
 
     async getById(id) {
@@ -21,23 +33,6 @@ class UserService {
             throw new Error('Invalid user ID.')
         }
         return user
-    }
-
-    async update(id, data) {
-        const updatedUser = await User.findOneAndUpdate( { _id: id }, {...data, updatedAt: Date.now() }, { new: true })
-        if(!updatedUser) {
-            throw new Error('Invalid user ID.')
-        }
-        return updatedUser
-    }
-
-    async del(id) {
-        const deletedUser = await this.get(id);
-        if(!deletedUser) {
-            throw new Error('Invalid user ID.')
-        }
-        const result = await User.deleteOne({_id: id});
-        return deletedUser
     }
 }
 

@@ -9,6 +9,7 @@ type Mutation {
   updateTodo(todoID: ID!, data: UpdateTodoInput!): Todo!
   markDone(todoID: ID!): Todo!
   markUnDone(todoID: ID!): Todo!
+  signUp(data: SignUpInput!): AuthPayload!
 }
 
 type Todo {
@@ -17,6 +18,13 @@ type Todo {
   tags: [String!]
   dueDate: String
   done: Boolean!
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  todos: [Todo!]!
 }
 
 input CreateTodoInput {
@@ -30,4 +38,15 @@ input UpdateTodoInput {
   tags: [String!]
   dueDate: String
   done: Boolean    
+}
+
+input SignUpInput {
+  name: String!
+  email: String!
+  password: String!
+}
+
+type AuthPayload {
+  token: String
+  user: User
 }
