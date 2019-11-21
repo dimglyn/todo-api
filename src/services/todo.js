@@ -32,7 +32,7 @@ class TodoService {
     }
 
     async del(id) {
-        const deletedTodo = await this.get(id);
+        const deletedTodo = await this.getById(id);
         if(!deletedTodo) {
             throw new Error('Invalid todo ID.')
         }

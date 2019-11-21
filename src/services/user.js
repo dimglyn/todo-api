@@ -1,6 +1,5 @@
 import User from '../models/user'
-
-const bcrypt = require('bcryptjs')
+import bcrypt from 'bcryptjs'
 
 
 class UserService {

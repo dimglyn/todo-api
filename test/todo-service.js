@@ -39,7 +39,7 @@ describe('Todo Service', function() {
     })
 
     it('should get a todo by its id', async function() {
-        const todo = await todoService.get(dummyTodoId)
+        const todo = await todoService.getById(dummyTodoId)
 
         expect(todo.text).to.equal(initialText)
         todo.tags.forEach((tag, index) => {
