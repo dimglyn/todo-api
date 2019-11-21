@@ -65,7 +65,7 @@ const Mutation  = {
     {expiresIn: '1h'})
 
     return { token , user: user }
-  }
+  },
 }
 
 export { Mutation as default }

@@ -1,6 +1,7 @@
 type Query {
   todos: [Todo!]!
   todo(todoID: ID!): Todo!    
+  login(data: LogInInput!): AuthPayload!
 }
 
 type Mutation {
@@ -42,6 +43,11 @@ input UpdateTodoInput {
 
 input SignUpInput {
   name: String!
+  email: String!
+  password: String!
+}
+
+input LogInInput {
   email: String!
   password: String!
 }

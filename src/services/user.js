@@ -9,7 +9,7 @@ class UserService {
 
     async create(data) {
         const { name, email, password } = data
-        const existingUser = await User.findOne({email: email})
+        const existingUser = await this.getByEmail(email)
         if(existingUser) {
             const error = new Error('User exists already!')
             throw error
@@ -32,6 +32,14 @@ class UserService {
             throw new Error('Invalid user ID.')
         }
         return user
+    }
+
+    async getByEmail(email) {
+      return await User.findOne({ email: email })
+    }
+
+    async validPassword(password, hashedPassword) {
+      return await bcrypt.compare(password, hashedPassword)
     }
 }
 
