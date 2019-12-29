@@ -1,16 +1,19 @@
 import Todo from '../models/todo'
-
 class TodoService {
     async getAll() {
       return await Todo.find({})
     }
 
-    async create(todo) {
+    async getAllByUser(userId) {
+      return await Todo.find({ user: userId })
+    }
+
+    async create(todo, userId) {
         const { text, tags, dueDate } = todo
         if(todo.text.trim() === "") {
             throw new Error("Task cannot be empty.")
         }
-        let newTodo = new Todo({ text, tags, dueDate })
+        let newTodo = new Todo({ text, tags, dueDate, user: userId })
         await newTodo.save()
         return newTodo
     }

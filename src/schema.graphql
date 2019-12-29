@@ -1,15 +1,17 @@
 type Query {
-  todos: [Todo!]!
-  todo(todoID: ID!): Todo!    
+  todos(userId: ID!): [Todo!]!
+  todo(todoId: ID!, userId: ID!): Todo!    
+
   login(data: LogInInput!): AuthPayload!
 }
 
 type Mutation {
-  createTodo(data: CreateTodoInput!): Todo!
-  deleteTodo(todoID: ID!): Todo!
-  updateTodo(todoID: ID!, data: UpdateTodoInput!): Todo!
-  markDone(todoID: ID!): Todo!
-  markUnDone(todoID: ID!): Todo!
+  createTodo(data: CreateTodoInput!, userId: ID!): Todo!
+  deleteTodo(todoId: ID!, userId: ID!): Todo!
+  updateTodo(todoId: ID!, userId: ID!, data: UpdateTodoInput!): Todo!
+  markDone(todoId: ID!, userId: ID!): Todo!
+  markUnDone(todoId: ID!, userID: ID!): Todo!
+
   signUp(data: SignUpInput!): AuthPayload!
 }
 
@@ -19,6 +21,7 @@ type Todo {
   tags: [String!]
   dueDate: String
   done: Boolean!
+  user: User!
 }
 
 type User {
@@ -53,6 +56,6 @@ input LogInInput {
 }
 
 type AuthPayload {
-  token: String
-  user: User
+  token: String!
+  user: User!
 }

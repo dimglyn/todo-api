@@ -9,13 +9,25 @@ const userService = new UserService()
 
 
 const Query  = {
-  todos: async (parent, args, ctx, info) => {
-    const todos = await todoService.getAll()
+  todos: async (parent, { userId }, ctx, info) => {
+    const user = userService.getById(userId)
+    if (!user) {
+      throw new Error('User does not exist')
+    }
+    const todos = await todoService.getAllByUser(userId)
     return todos
   },
 
-  todo: async (parent, args, ctx, info) => {
-    const todo = await todoService.getById(args.todoID)
+  todo: async (parent, { todoId, userId }, ctx, info) => {
+    const user = userService.getById(userId)
+    if (!user) {
+      throw new Error('User does not exist')
+    }
+    const userOwnsTodo = user.todos.includes(todoId)
+    if (!userOwnsTodo) {
+      throw new Error('This is not your todo')
+    }
+    const todo = await todoService.getById(todoID)
     return todo
   },
   login: async (parent, { data }, ctx, info) => {
