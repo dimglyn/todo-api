@@ -23,6 +23,11 @@ const TodoSchema = new Schema({
         type: Boolean,
         required: true,
         default: false
+    },
+    user : {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'User'
     }
 })
 

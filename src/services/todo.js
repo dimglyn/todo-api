@@ -1,21 +1,24 @@
 import Todo from '../models/todo'
-
 class TodoService {
     async getAll() {
       return await Todo.find({})
     }
 
-    async create(todo) {
+    async getAllByUser(userId) {
+      return await Todo.find({ user: userId })
+    }
+
+    async create(todo, userId) {
         const { text, tags, dueDate } = todo
         if(todo.text.trim() === "") {
             throw new Error("Task cannot be empty.")
         }
-        let newTodo = new Todo({ text, tags, dueDate })
+        let newTodo = new Todo({ text, tags, dueDate, user: userId })
         await newTodo.save()
         return newTodo
     }
 
-    async get(id) {
+    async getById(id) {
         const todo = await Todo.findOne({_id: id})
         if(!todo) {
             throw new Error('Invalid todo ID.')
@@ -32,7 +35,7 @@ class TodoService {
     }
 
     async del(id) {
-        const deletedTodo = await this.get(id);
+        const deletedTodo = await this.getById(id);
         if(!deletedTodo) {
             throw new Error('Invalid todo ID.')
         }
