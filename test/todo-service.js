@@ -17,7 +17,7 @@ const initialTags = ['tag1', 'tag2', 'tag3']
 
 describe('Todo Service', function() {
     before(async function(){
-        await mongoose.connect(`${config.MONGOURI}?retryWrites=true`, { useNewUrlParser: true, useFindAndModify: false })
+        await mongoose.connect(`${config.MONGOURI}Test?retryWrites=true`, { useNewUrlParser: true, useFindAndModify: false })
         dummyUser = new User({email: 'testuser@test.com', name: 'testUser', password: '123456hashed'})
         dummyUser = await dummyUser.save()
     })
