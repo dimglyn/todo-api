@@ -1,5 +1,5 @@
 import TodoDAO from '../dao/todo'
-const todoDAO = new TodoDAO();
+const todoDAO = new TodoDAO()
 class TodoService {
     async getAll() {
       return await todoDAO.getAll()
@@ -34,11 +34,11 @@ class TodoService {
     }
 
     async del(id) {
-        const deletedTodo = await this.getById(id);
+        const deletedTodo = await this.getById(id)
         if(!deletedTodo) {
             throw new Error('Invalid todo ID.')
         }
-        const result = await todoDAO.deleteById(id);
+        const result = await todoDAO.deleteById(id)
         return deletedTodo
     }
 }
