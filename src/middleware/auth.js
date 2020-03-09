@@ -2,11 +2,11 @@ import jwt from 'jsonwebtoken'
 import UserService from '../services/user'
 const userService = new UserService()
 
-// TODO verify token
+// TODO extract secret and use from config
 const isLoggedIn = async (resolve, parent, args, ctx, info) => {
-  const token = ctx.request.get('Authorization')
-
-  const decoded = jwt.decode(token.split(' ')[1])
+  const authHeader = ctx.request.get('Authorization')
+  const [ , token] = authHeader.split(' ');
+  const decoded = jwt.verify(token, 'supersecretsecretysecret')
 
   const user = await userService.getById(decoded.userId)
   if(user.email !== decoded.email) {
