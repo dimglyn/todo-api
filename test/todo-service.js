@@ -1,5 +1,6 @@
 import TodoService from '../src/services/todo'
 import Todo from '../src/models/todo'
+import User from '../src/models/user'
 import mongoose from 'mongoose'
 import { expect } from 'chai'
 import config from '../config'
@@ -7,20 +8,23 @@ import config from '../config'
 const todoService = new TodoService()
 
 let dummyTodoId
+let dummyUser
 const initialText = 'This is a test todo'
 const initialTags = ['tag1', 'tag2', 'tag3']
 
 describe('Todo Service', function() {
     before(async function(){
         await mongoose.connect(`${config.MONGOURI}?retryWrites=true`, { useNewUrlParser: true, useFindAndModify: false })
+        dummyUser = new User({email: 'testuser@test.com', name: 'testUser', password: '123456hashed'})
+        dummyUser = await dummyUser.save()
     })
 
     it('should add a new todo in the database', async function(){ 
-        const payload = {
+        const todoPayload = {
             text: initialText,
             tags: initialTags
         }
-        const todo = await todoService.create(payload)
+        const todo = await todoService.create(todoPayload, dummyUser._id)
         dummyTodoId = todo._id
         expect(todo).to.have.property('text')
         expect(todo).to.have.property('dueDate')
@@ -71,6 +75,7 @@ describe('Todo Service', function() {
 
     after(async function(){
         await Todo.deleteMany({})
+        await User.deleteMany({})
         await mongoose.disconnect()
     })
 })
