@@ -13,7 +13,15 @@ import { isLoggedIn } from './middleware/auth'
 
 const permissions = {
   Query: {
-    todos: isLoggedIn
+    todos: isLoggedIn,
+    todo: isLoggedIn
+  },
+  Mutation: {
+    createTodo: isLoggedIn,
+    deleteTodo: isLoggedIn,
+    updateTodo: isLoggedIn,
+    markDone: isLoggedIn,
+    markUnDone: isLoggedIn
   }
 }
 
