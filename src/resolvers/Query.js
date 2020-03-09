@@ -14,7 +14,7 @@ const Query  = {
     if (!user) {
       throw new Error('User does not exist')
     }
-    const todos = await todoService.getAllByUser(userId)
+    const todos = await todoService.getAllByUserId(userId)
     return todos
   },
 

@@ -1,25 +1,24 @@
-import Todo from '../models/todo'
+import TodoDAO from '../dao/todo'
+const todoDAO = new TodoDAO();
 class TodoService {
     async getAll() {
-      return await Todo.find({})
+      return await todoDAO.getAll()
     }
 
-    async getAllByUser(userId) {
-      return await Todo.find({ user: userId })
+    async getAllByUserId(userId) {
+      return await todoDAO.getAllByUserId(userId)
     }
 
     async create(todo, userId) {
-        const { text, tags, dueDate } = todo
-        if(todo.text.trim() === "") {
+        const { text } = todo
+        if(text.trim() === "") {
             throw new Error("Task cannot be empty.")
         }
-        let newTodo = new Todo({ text, tags, dueDate, user: userId })
-        await newTodo.save()
-        return newTodo
+        return await todoDAO.create({ ...todo, user: userId })
     }
 
     async getById(id) {
-        const todo = await Todo.findOne({_id: id})
+        const todo = await todoDAO.getById(id)
         if(!todo) {
             throw new Error('Invalid todo ID.')
         }
@@ -27,7 +26,7 @@ class TodoService {
     }
 
     async update(id, data) {
-        const updatedTodo = await Todo.findOneAndUpdate( { _id: id }, {...data, updatedAt: Date.now() }, { new: true })
+        const updatedTodo = await todoDAO.updateById(id, data)
         if(!updatedTodo) {
             throw new Error('Invalid todo ID.')
         }
@@ -39,7 +38,7 @@ class TodoService {
         if(!deletedTodo) {
             throw new Error('Invalid todo ID.')
         }
-        const result = await Todo.deleteOne({_id: id});
+        const result = await todoDAO.deleteById(id);
         return deletedTodo
     }
 }

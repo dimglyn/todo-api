@@ -3,7 +3,7 @@ const todoService = new TodoService()
 
 const User = {
   todos: async(parent, args, ctx, info) => {
-    const todo = await todoService.getAllByUser(parent.id)
+    const todo = await todoService.getAllByUserId(parent.id)
     return todo
   }
 }
