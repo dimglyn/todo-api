@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken'
 import UserService from '../services/user'
-const userService = new UserService()
+import UserDAO from '../dao/user'
+
+const userService = new UserService({ userDAO: new UserDAO() })
 
 // TODO extract secret and use from config
 const isLoggedIn = async (resolve, parent, args, ctx, info) => {

@@ -5,7 +5,9 @@ import { expect } from 'chai'
 import config from '../config'
 import bcrypt from 'bcryptjs'
 
-const userService = new UserService()
+// TODO: use mock dao
+import UserDAO from '../src/dao/user'
+const userService = new UserService({userDAO: new UserDAO()})
 
 describe('User Service', function() {
     before(async function(){

@@ -1,15 +1,19 @@
 import TodoService from '../services/todo'
 import UserService from '../services/user'
-import validator from 'validator'
 
+import TodoDAO from '../dao/todo'
+import UserDAO from '../dao/user'
+
+import validator from 'validator'
 import jwt from 'jsonwebtoken'
 
-const userService = new UserService()
-const todoService = new TodoService()
+
+const userService = new UserService({ userDAO: new UserDAO() })
+const todoService = new TodoService({ todoDAO: new TodoDAO() })
 
 const Mutation  = {
   createTodo: async (parent, { data, userId }, ctx, info) => {
-    const user = userService.getById(userId)
+  const user = userService.getById(userId)
     if (!user) {
       throw new Error('User does not exist')
     }

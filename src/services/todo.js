@@ -1,12 +1,13 @@
-import TodoDAO from '../dao/todo'
-const todoDAO = new TodoDAO()
-class TodoService {
+export default class TodoService {
+    constructor({ todoDAO }) {
+      this.todoDAO = todoDAO
+    }
     async getAll() {
-      return await todoDAO.getAll()
+      return await this.todoDAO.getAll()
     }
 
     async getAllByUserId(userId) {
-      return await todoDAO.getAllByUserId(userId)
+      return await this.todoDAO.getAllByUserId(userId)
     }
 
     async create(todo, userId) {
@@ -14,11 +15,11 @@ class TodoService {
         if(text.trim() === "") {
             throw new Error("Task cannot be empty.")
         }
-        return await todoDAO.create({ ...todo, user: userId })
+        return await this.todoDAO.create({ ...todo, user: userId })
     }
 
     async getById(id) {
-        const todo = await todoDAO.getById(id)
+        const todo = await this.todoDAO.getById(id)
         if(!todo) {
             throw new Error('Invalid todo ID.')
         }
@@ -26,7 +27,7 @@ class TodoService {
     }
 
     async update(id, data) {
-        const updatedTodo = await todoDAO.updateById(id, data)
+        const updatedTodo = await this.todoDAO.updateById(id, data)
         if(!updatedTodo) {
             throw new Error('Invalid todo ID.')
         }
@@ -38,9 +39,7 @@ class TodoService {
         if(!deletedTodo) {
             throw new Error('Invalid todo ID.')
         }
-        const result = await todoDAO.deleteById(id)
+        const result = await this.todoDAO.deleteById(id)
         return deletedTodo
     }
 }
-
-export { TodoService as default }

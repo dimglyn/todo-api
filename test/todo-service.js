@@ -1,11 +1,14 @@
 import TodoService from '../src/services/todo'
 import Todo from '../src/models/todo'
 import User from '../src/models/user'
+import TodoDAO from '../src/dao/todo'
+
 import mongoose from 'mongoose'
 import { expect } from 'chai'
 import config from '../config'
 
-const todoService = new TodoService()
+//TODO: use mock DAO
+const todoService = new TodoService({ todoDAO: new TodoDAO() })
 
 let dummyTodoId
 let dummyUser

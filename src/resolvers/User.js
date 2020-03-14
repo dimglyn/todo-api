@@ -1,5 +1,7 @@
 import TodoService from '../services/todo'
-const todoService = new TodoService()
+import TodoDAO from '../dao/todo'
+
+const todoService = new TodoService({ todoDAO: new TodoDAO() })
 
 const User = {
   todos: async(parent, args, ctx, info) => {

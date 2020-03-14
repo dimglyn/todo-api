@@ -1,11 +1,14 @@
 import TodoService from '../services/todo'
 import UserService from '../services/user'
+
+import TodoDAO from '../dao/todo'
+import UserDAO from '../dao/user'
+
 import jwt from 'jsonwebtoken'
 import validator from 'validator'
 
-const todoService = new TodoService()
-const userService = new UserService()
-
+const todoService = new TodoService({ todoDAO: new TodoDAO() })
+const userService = new UserService({ userDAO: new UserDAO() })
 
 
 const Query  = {
@@ -31,7 +34,7 @@ const Query  = {
     return todo
   },
   login: async (parent, { data }, ctx, info) => {
-    if (!validator.isEmail(data.email) || !Object.prototype.hasOwnProperty('password')) {
+    if (!validator.isEmail(data.email)) {
       throw new Error('E-mail is invalid.')
     }
 
