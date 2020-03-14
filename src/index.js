@@ -1,10 +1,7 @@
 import { GraphQLServer } from 'graphql-yoga'
-import morgan from 'morgan'
-import { MONGOURI } from '../config'
-import cors from 'cors'
-import logger from './util/logger'
-import mongoose from 'mongoose'
+import initApp from './loaders'
 import bodyParser from 'body-parser'
+
 import Query from './resolvers/Query'
 import Mutation from './resolvers/Mutation'
 import Todo from './resolvers/Todo'
@@ -25,30 +22,26 @@ const permissions = {
   }
 }
 
-const server = new GraphQLServer({
-  typeDefs: './src/schema.graphql',
-  resolvers: {
-    Query,
-    Mutation,
-    Todo,
-    User
-  },
-  context: req => ({...req}),
-  middlewares: [permissions]
-})
 
-server.express.use(bodyParser.json())
-server.express.use(morgan('combined'))
-server.express.use(cors())
-
-server.start(() =>{ 
-  console.log('GraphQL server is up!')
-})
-
-mongoose.connect(MONGOURI, {
-    useNewUrlParser: true
+const startServer = async () => {
+  const server = new GraphQLServer({
+    typeDefs: './src/schema.graphql',
+    resolvers: {
+      Query,
+      Mutation,
+      Todo,
+      User
+    },
+    context: req => ({...req}),
+    middlewares: [permissions]
   })
-  .then(() => {
-    logger.info(`Mongoose connected on: ${MONGOURI}`)
+  
+  await initApp({server})
+  server.express.use(bodyParser.json())
+
+  server.start(() =>{ 
+    console.log('GraphQL server is up!')
   })
-  .catch(err => logger.error(err))
+}
+
+startServer()
