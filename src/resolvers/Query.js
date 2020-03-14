@@ -31,11 +31,14 @@ const Query  = {
     return todo
   },
   login: async (parent, { data }, ctx, info) => {
-    if (!validator.isEmail(data.email)) {
+    if (!validator.isEmail(data.email) || !Object.prototype.hasOwnProperty('password')) {
       throw new Error('E-mail is invalid.')
     }
 
     const user = await userService.getByEmail(data.email)
+    if (!user) {
+      throw new Error('User does not exist')
+    }
     const validPass = await userService.validPassword(data.password, user.password)
 
     if (!validPass) {
