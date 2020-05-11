@@ -1,63 +1,67 @@
-import TodoService from '../services/todo'
-import UserService from '../services/user'
+import jwt from 'jsonwebtoken';
+import validator from 'validator';
 
-import TodoDAO from '../dao/todo'
-import UserDAO from '../dao/user'
+import TodoService from '../services/todo';
+import UserService from '../services/user';
 
-import jwt from 'jsonwebtoken'
-import validator from 'validator'
+import TodoDAO from '../dao/todo';
+import UserDAO from '../dao/user';
 
-const todoService = new TodoService({ todoDAO: new TodoDAO() })
-const userService = new UserService({ userDAO: new UserDAO() })
+const todoService = new TodoService({ todoDAO: new TodoDAO() });
+const userService = new UserService({ userDAO: new UserDAO() });
 
-
-const Query  = {
-  todos: async (parent, { userId }, ctx, info) => {
-    const user = userService.getById(userId)
+const Query = {
+  todos: async (parent, { userId }) => {
+    const user = userService.getById(userId);
     if (!user) {
-      throw new Error('User does not exist')
+      throw new Error('User does not exist');
     }
-    const todos = await todoService.getAllByUserId(userId)
-    return todos
+    const todos = await todoService.getAllByUserId(userId);
+    return todos;
   },
 
-  todo: async (parent, { todoId, userId }, ctx, info) => {
-    const user = userService.getById(userId)
+  todo: async (parent, { todoId, userId }) => {
+    const user = userService.getById(userId);
     if (!user) {
-      throw new Error('User does not exist')
+      throw new Error('User does not exist');
     }
-    const userOwnsTodo = user.todos.includes(todoId)
+    const userOwnsTodo = user.todos.includes(todoId);
     if (!userOwnsTodo) {
-      throw new Error('This is not your todo')
+      throw new Error('This is not your todo');
     }
-    const todo = await todoService.getById(todoID)
-    return todo
+    const todo = await todoService.getById(todoId);
+    return todo;
   },
-  login: async (parent, { data }, ctx, info) => {
+  login: async (parent, { data }) => {
     if (!validator.isEmail(data.email)) {
-      throw new Error('E-mail is invalid.')
+      throw new Error('E-mail is invalid.');
     }
 
-    const user = await userService.getByEmail(data.email)
+    const user = await userService.getByEmail(data.email);
     if (!user) {
-      throw new Error('User does not exist')
+      throw new Error('User does not exist');
     }
-    const validPass = await userService.validPassword(data.password, user.password)
+    const validPass = await userService.validPassword(
+      data.password,
+      user.password,
+    );
 
     if (!validPass) {
       const error = new Error('Password is incorrect');
       error.code = 401;
       throw error;
     }
-    const token = jwt.sign({
-      userId: user._id.toString(),
-      email: user.email
-    }, 
-    'supersecretsecretysecret',
-    {expiresIn: '1h'})
+    const token = jwt.sign(
+      {
+        userId: user._id.toString(),
+        email: user.email,
+      },
+      'supersecretsecretysecret',
+      { expiresIn: '1h' },
+    );
 
-    return { token , user: user }
-  }
-}
+    return { token, user };
+  },
+};
 
-export { Query as default }
+export { Query as default };

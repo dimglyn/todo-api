@@ -1,27 +1,28 @@
-import { GraphQLServer } from 'graphql-yoga'
-import initApp from './loaders'
-import bodyParser from 'body-parser'
+import bodyParser from 'body-parser';
+import { GraphQLServer } from 'graphql-yoga';
 
-import Query from './resolvers/Query'
-import Mutation from './resolvers/Mutation'
-import Todo from './resolvers/Todo'
-import User from './resolvers/User'
-import { isLoggedIn } from './middleware/auth'
+import initApp from './loaders';
+import logger from './util/logger';
+
+import Query from './resolvers/Query';
+import Mutation from './resolvers/Mutation';
+import Todo from './resolvers/Todo';
+import User from './resolvers/User';
+import isLoggedIn from './middleware/auth';
 
 const permissions = {
   Query: {
     todos: isLoggedIn,
-    todo: isLoggedIn
+    todo: isLoggedIn,
   },
   Mutation: {
     createTodo: isLoggedIn,
     deleteTodo: isLoggedIn,
     updateTodo: isLoggedIn,
     markDone: isLoggedIn,
-    markUnDone: isLoggedIn
-  }
-}
-
+    markUnDone: isLoggedIn,
+  },
+};
 
 const startServer = async () => {
   const server = new GraphQLServer({
@@ -30,18 +31,18 @@ const startServer = async () => {
       Query,
       Mutation,
       Todo,
-      User
+      User,
     },
-    context: req => ({...req}),
-    middlewares: [permissions]
-  })
-  
-  await initApp({server})
-  server.express.use(bodyParser.json())
+    context: (req) => ({ ...req }),
+    middlewares: [permissions],
+  });
 
-  server.start(() =>{ 
-    console.log('GraphQL server is up!')
-  })
-}
+  await initApp({ server });
+  server.express.use(bodyParser.json());
 
-startServer()
+  server.start(() => {
+    logger.info('GraphQL server is up!');
+  });
+};
+
+startServer();

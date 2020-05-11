@@ -7,7 +7,8 @@
     "test": "mocha --require @babel/register --timeout 5000",
     "start": "nodemon src/index.js --ext js,graphql --exec babel-node",
     "debug": "nodemon --inspect src/index.js",
-    "docker": "set HOST=0.0.0.0&& npm start"
+    "docker": "set HOST=0.0.0.0&& npm start",
+    "lint": "eslint . --fix"
   },
   "author": "",
   "license": "ISC",
@@ -31,6 +32,9 @@
     "@babel/core": "^7.7.2",
     "@babel/node": "^7.7.0",
     "@babel/preset-env": "^7.7.1",
-    "@babel/register": "^7.7.0"
+    "@babel/register": "^7.7.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2"
   }
 }

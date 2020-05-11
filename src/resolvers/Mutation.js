@@ -1,103 +1,108 @@
-import TodoService from '../services/todo'
-import UserService from '../services/user'
+import validator from 'validator';
+import jwt from 'jsonwebtoken';
+import logger from '../util/logger';
 
-import TodoDAO from '../dao/todo'
-import UserDAO from '../dao/user'
+import TodoService from '../services/todo';
+import UserService from '../services/user';
 
-import validator from 'validator'
-import jwt from 'jsonwebtoken'
+import TodoDAO from '../dao/todo';
+import UserDAO from '../dao/user';
 
+const userService = new UserService({ userDAO: new UserDAO() });
+const todoService = new TodoService({ todoDAO: new TodoDAO() });
 
-const userService = new UserService({ userDAO: new UserDAO() })
-const todoService = new TodoService({ todoDAO: new TodoDAO() })
-
-const Mutation  = {
-  createTodo: async (parent, { data, userId }, ctx, info) => {
-  const user = userService.getById(userId)
+const Mutation = {
+  createTodo: async (parent, { data, userId }) => {
+    const user = userService.getById(userId);
     if (!user) {
-      throw new Error('User does not exist')
+      throw new Error('User does not exist');
     }
-    const todos = await todoService.create(data, userId)
-    return todos
+    const todos = await todoService.create(data, userId);
+    return todos;
   },
-  deleteTodo: async (parent, { todoId,  userId}, ctx, info) => {
-    const user = userService.getById(userId)
+  deleteTodo: async (parent, { todoId, userId }) => {
+    const user = userService.getById(userId);
     if (!user) {
-      throw new Error('User does not exist')
+      throw new Error('User does not exist');
     }
-    const userOwnsTodo = user.todos.include(todoId)
+    const userOwnsTodo = user.todos.include(todoId);
     if (!userOwnsTodo) {
-      throw new Error('This is not your todo')
+      throw new Error('This is not your todo');
     }
-    
-    const todo = await todoService.del(todoId)
-    return todo
+
+    const todo = await todoService.del(todoId);
+    return todo;
   },
-  updateTodo: async (parent, { data, todoId }, ctx, info) => {
-    const user = userService.getById(userId)
-    const userOwnsTodo = user.todos.include(todoId)
+  updateTodo: async (parent, { data, todoId, userId }) => {
+    const user = userService.getById(userId);
+    const userOwnsTodo = user.todos.include(todoId);
     if (!userOwnsTodo) {
-      throw new Error('This is not your todo')
+      throw new Error('This is not your todo');
     }
     const update = {
-      ...data.text && {text: data.text},
-      ...data.tags && {tags: [...data.tags]},
-      ...data.dueDate && {dueDate: data.dueDate},
-      ...data.done && {done: data.done},
-    }
-    const todo = await todoService.update(todoId, update)
-    return todo
-  },
-  markDone: async (parent, { todoId }, ctx, info) => {
-    const user = userService.getById(userId)
-    const userOwnsTodo = user.todos.include(todoId)
-    if (!userOwnsTodo) {
-      throw new Error('This is not your todo')
-    }
-    const todo = await todoService.update(todoId, {done: true});
+      ...(data.text && { text: data.text }),
+      ...(data.tags && { tags: [...data.tags] }),
+      ...(data.dueDate && { dueDate: data.dueDate }),
+      ...(data.done && { done: data.done }),
+    };
+    const todo = await todoService.update(todoId, update);
     return todo;
   },
-  markUnDone: async (parent, { todoId, userId }, ctx, info) => {
-    const user = userService.getById(userId)
-    const userOwnsTodo = user.todos.include(todoId)
+  markDone: async (parent, { todoId, userId }) => {
+    const user = userService.getById(userId);
+    const userOwnsTodo = user.todos.include(todoId);
     if (!userOwnsTodo) {
-      throw new Error('This is not your todo')
+      throw new Error('This is not your todo');
     }
-    const todo = await todoService.update(args.todoId, {done: false});
+    const todo = await todoService.update(todoId, { done: true });
+    return todo;
+  },
+  markUnDone: async (parent, { todoId, userId }) => {
+    const user = userService.getById(userId);
+    const userOwnsTodo = user.todos.include(todoId);
+    if (!userOwnsTodo) {
+      throw new Error('This is not your todo');
+    }
+    const todo = await todoService.update(todoId, { done: false });
     return todo;
   },
 
-  signUp: async (parent, { data }, ctx, info) => {
-    const errors = []
+  signUp: async (parent, { data }) => {
+    const errors = [];
 
     if (!validator.isEmail(data.email)) {
-      errors.push({ message: 'E-mail is invalid.' })
+      errors.push({ message: 'E-mail is invalid.' });
     }
 
-    if(validator.isEmpty(data.password) || !validator.isLength(data.password, { min: 5 })){
-        errors.push({message: 'Password too short!'})
+    if (
+      validator.isEmpty(data.password)
+      || !validator.isLength(data.password, { min: 5 })
+    ) {
+      errors.push({ message: 'Password too short!' });
     }
 
-    if(errors.length > 0) {
-      const error = new Error('Invalid input.')
-      error.data = errors
-      error.code = 422
-      throw error
+    if (errors.length > 0) {
+      const error = new Error('Invalid input.');
+      error.data = errors;
+      error.code = 422;
+      throw error;
     }
 
-    const user = await userService.create(data)
+    const user = await userService.create(data);
 
-    console.log(user.email);
+    logger.info(user.email);
 
-    const token = jwt.sign({
-      userId: user._id.toString(),
-      email: user.email
-    }, 
-    'supersecretsecretysecret',
-    {expiresIn: '1h'})
+    const token = jwt.sign(
+      {
+        userId: user._id.toString(),
+        email: user.email,
+      },
+      'supersecretsecretysecret',
+      { expiresIn: '1h' },
+    );
 
-    return { token , user: user }
+    return { token, user };
   },
-}
+};
 
-export { Mutation as default }
+export { Mutation as default };

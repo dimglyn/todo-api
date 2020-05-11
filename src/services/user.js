@@ -1,45 +1,44 @@
-import UserDAO from '../dao/user'
-import bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs';
+import UserDAO from '../dao/user';
 
-const userDAO = new UserDAO()
-
+const userDAO = new UserDAO();
 
 class UserService {
-    async getAll() {
-      return await userDAO.findAll()
-    }
+  async getAll() {
+    return userDAO.findAll();
+  }
 
-    async create(data) {
-        const { name, email, password } = data
-        const existingUser = await userDAO.findByEmail(email)
-        if(existingUser) {
-            const error = new Error('User exists already!')
-            throw error
-        }
-        const hashedPw = await bcrypt.hash(password, 12)
-        
-        return userDAO.create({
-            email,
-            name,
-            password: hashedPw
-        })
+  async create(data) {
+    const { name, email, password } = data;
+    const existingUser = await userDAO.findByEmail(email);
+    if (existingUser) {
+      const error = new Error('User exists already!');
+      throw error;
     }
+    const hashedPw = await bcrypt.hash(password, 12);
 
-    async getById(id) {
-        const user = await userDAO.findById(id)
-        if(!user) {
-            throw new Error('Invalid user ID.')
-        }
-        return user
-    }
+    return userDAO.create({
+      email,
+      name,
+      password: hashedPw,
+    });
+  }
 
-    async getByEmail(email) {
-      return await userDAO.findByEmail(email)
+  async getById(id) {
+    const user = await userDAO.findById(id);
+    if (!user) {
+      throw new Error('Invalid user ID.');
     }
+    return user;
+  }
 
-    async validPassword(password, hashedPassword) {
-      return await bcrypt.compare(password, hashedPassword)
-    }
+  async getByEmail(email) {
+    return userDAO.findByEmail(email);
+  }
+
+  async validPassword(password, hashedPassword) {
+    return bcrypt.compare(password, hashedPassword);
+  }
 }
 
-export { UserService as default }
+export { UserService as default };

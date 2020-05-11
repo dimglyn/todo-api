@@ -1,26 +1,48 @@
-import Todo from '../models/todo'
+import Todo from '../models/todo';
 
 class TodoDAO {
   async getAll() {
-    return await Todo.find({})
+    return Todo.find({});
   }
+
   async getAllByUserId(id) {
-    return await Todo.find({ user: id })
+    return Todo.find({
+      user: id,
+    });
   }
+
   async create(todoPayload) {
-    let newTodo = new Todo(todoPayload)
-    await newTodo.save()
-    return newTodo
+    const newTodo = new Todo(todoPayload);
+    await newTodo.save();
+    return newTodo;
   }
+
   async getById(id) {
-    return await Todo.findOne({_id: id})
+    return Todo.findOne({
+      _id: id,
+    });
   }
+
   async updateById(id, payload) {
-    return await Todo.findOneAndUpdate( { _id: id }, {...payload, updatedAt: Date.now() }, { new: true })
+    return Todo.findOneAndUpdate(
+      {
+        _id: id,
+      },
+      {
+        ...payload,
+        updatedAt: Date.now(),
+      },
+      {
+        new: true,
+      },
+    );
   }
+
   async deleteById(id) {
-    return await Todo.deleteOne({_id: id});
+    return Todo.deleteOne({
+      _id: id,
+    });
   }
 }
 
-export { TodoDAO as default }
+export { TodoDAO as default };

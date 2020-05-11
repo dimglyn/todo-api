@@ -1,0 +1,39 @@
+{
+  "env": {
+    "es6": true,
+    "node": true,
+    "mocha": true
+  },
+  "extends": [
+    "airbnb-base"
+  ],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly",
+    "expect": true
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.test.js",
+        "*.spec.js"
+      ],
+      "rules": {
+        "no-unused-expressions": "off"
+      }
+    }
+  ],
+  "parserOptions": {
+    "ecmaVersion": 11,
+    "sourceType": "module"
+  },
+  "rules": {
+    "semi": "error",
+    "no-underscore-dangle": 0,
+    "camelcase": 1,
+    "prefer-arrow-callback": 1,
+    "no-undef": "warn",
+    "no-tabs": 1,
+    "class-methods-use-this": "off"
+  }
+}
