@@ -23,7 +23,7 @@
     "mocha": "^6.2.0",
     "mongoose": "^5.7.5",
     "morgan": "^1.9.1",
-    "validator": "^12.1.0",
+    "validator": "^13.7.0",
     "vue": "^2.6.11",
     "winston": "^3.2.1"
   },
